@@ -1,0 +1,19 @@
+{
+  "name": "mycrm",
+  "version": "1.0.0",
+  "description": "CRM System - Lead Management",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd server && npm start",
+    "install:all": "cd server && npm install && cd ../frontend && npm install"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
