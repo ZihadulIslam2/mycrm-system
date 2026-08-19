@@ -146,14 +146,17 @@ export const bulkUploadLeads = async (req: Request, res: Response) => {
 
     const count = await Lead.countDocuments();
 
-    const scoredLeads = leadsData.map((leadData: Partial<ILead>, index: number) => {
-      const scoreBreakdown = calculateLeadScore(leadData);
+    const scoredLeads = leadsData.map((leadData: any, index: number) => {
+      const cleanData = { ...leadData };
+      delete cleanData._id;
+      delete cleanData.__v;
+      const scoreBreakdown = calculateLeadScore(cleanData);
       return {
-        ...leadData,
-        leadId: leadData.leadId || `LEAD-${String(count + index + 1).padStart(5, '0')}`,
-        leadScore: scoreBreakdown.total,
-        leadTemperature: scoreBreakdown.temperature,
-        scoreBreakdown,
+        ...cleanData,
+        leadId: cleanData.leadId || `LEAD-${Date.now().toString().slice(-4)}${String(count + index + 1).padStart(4, '0')}`,
+        leadScore: typeof cleanData.leadScore === 'number' ? cleanData.leadScore : scoreBreakdown.total,
+        leadTemperature: cleanData.leadTemperature || scoreBreakdown.temperature,
+        scoreBreakdown: cleanData.scoreBreakdown || scoreBreakdown,
       };
     });
 
